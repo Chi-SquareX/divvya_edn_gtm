@@ -66,7 +66,7 @@ if not os.path.exists(output_dir):
 
 if __name__ == "__main__":
 
-    img_src = glob.glob("./image/*.jpg")      # Enter the image directory
+    img_src = glob.glob("./image/*.tif")      # Enter the image directory
 
     cnt=0
     for img_path in img_src:
@@ -82,7 +82,8 @@ if __name__ == "__main__":
         base_path_result = 'patchMap/'
         # imgname = 'waterfall.tif'
         save_dir = './result/'
-        modelDir = 'PMS-Net.h5'
+        modelDir = './weights/PMS-Net.h5'
+        # print(img_name)
         start_testing(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir)
         out_path = save_dir + 'py_recover_' + str(img_name.split('.')[0]) + '.jpg'
         t = cv2.imread(out_path)

@@ -10,7 +10,7 @@ import matplotlib.image
 def start_testing(base_path_hazyImg, base_path_result, imgname, save_dir, modelDir):
     print("Process image: ", imgname)
 
-    image = cv2.imread(base_path_hazyImg + imgname)
+    image = cv2.imread(base_path_hazyImg + imgname + ".tif")
     if image.shape[0] != 480 or image.shape[1] != 640:
         print('resize image tp 640*480')
         image = cv2.resize(image, (640, 480))
