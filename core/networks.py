@@ -54,65 +54,65 @@ def gan_model(generator, discriminator):
 def unet_spp_large_swish_generator_model():
     inputs = Input(image_shape)
 
-    conv1 = convolution_2d(inputs, 64, 3, act_type="swish")
-    conv1 = convolution_2d(conv1, 64, 3, act_type="swish")
-    conv1 = convolution_2d(conv1, 64, 3, act_type="swish")
+    conv1 = convolution_2d(inputs, 64, 3, act_type="mish")
+    conv1 = convolution_2d(conv1, 64, 3, act_type="mish")
+    conv1 = convolution_2d(conv1, 64, 3, act_type="mish")
     pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
 
-    conv2 = convolution_2d(pool1, 128, 3, act_type="swish")
-    conv2 = convolution_2d(conv2, 128, 3, act_type="swish")
-    conv2 = convolution_2d(conv2, 128, 3, act_type="swish")
+    conv2 = convolution_2d(pool1, 128, 3, act_type="mish")
+    conv2 = convolution_2d(conv2, 128, 3, act_type="mish")
+    conv2 = convolution_2d(conv2, 128, 3, act_type="mish")
     pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
 
-    conv3 = convolution_2d(pool2, 256, 3, act_type="swish")
-    conv3 = convolution_2d(conv3, 256, 3, act_type="swish")
-    conv3 = convolution_2d(conv3, 256, 3, act_type="swish")
+    conv3 = convolution_2d(pool2, 256, 3, act_type="mish")
+    conv3 = convolution_2d(conv3, 256, 3, act_type="mish")
+    conv3 = convolution_2d(conv3, 256, 3, act_type="mish")
     pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
 
-    conv4 = convolution_2d(pool3, 512, 3, act_type="swish")
-    conv4 = convolution_2d(conv4, 512, 3, act_type="swish")
-    conv4 = convolution_2d(conv4, 512, 3, act_type="swish")
+    conv4 = convolution_2d(pool3, 512, 3, act_type="mish")
+    conv4 = convolution_2d(conv4, 512, 3, act_type="mish")
+    conv4 = convolution_2d(conv4, 512, 3, act_type="mish")
     drop4 = Dropout(0.5)(conv4)
     pool4 = MaxPooling2D(pool_size=(2, 2))(drop4)
 
-    conv5 = convolution_2d(pool4, 1024, 3, act_type="swish")
-    conv5 = convolution_2d(conv5, 1024, 3, act_type="swish")
-    conv5 = convolution_2d(conv5, 1024, 3, act_type="swish")
+    conv5 = convolution_2d(pool4, 1024, 3, act_type="mish")
+    conv5 = convolution_2d(conv5, 1024, 3, act_type="mish")
+    conv5 = convolution_2d(conv5, 1024, 3, act_type="mish")
 
     # SPP #
-    conv5 = convolution_2d(conv5, 512, 1, act_type="swish")
+    conv5 = convolution_2d(conv5, 512, 1, act_type="mish")
 
     conv5 = concatenate([conv5,
                          MaxPooling2D(pool_size=(13, 13), strides=1, padding='same')(conv5),
                          MaxPooling2D(pool_size=(9, 9), strides=1, padding='same')(conv5),
                          MaxPooling2D(pool_size=(5, 5), strides=1, padding='same')(conv5)], axis=3)
 
-    conv5 = convolution_2d(conv5, 1024, 1, act_type="swish")
+    conv5 = convolution_2d(conv5, 1024, 1, act_type="mish")
     drop5 = Dropout(0.5)(conv5)
 
-    up6 = convolution_2d((UpSampling2D(size=(2, 2))(drop5)), 512, 2, act_type="swish")
+    up6 = convolution_2d((UpSampling2D(size=(2, 2))(drop5)), 512, 2, act_type="mish")
     merge6 = concatenate([drop4, up6], axis=3)
-    conv6 = convolution_2d(merge6, 512, 3, act_type="swish")
-    conv6 = convolution_2d(conv6, 512, 3, act_type="swish")
-    conv6 = convolution_2d(conv6, 512, 3, act_type="swish")
+    conv6 = convolution_2d(merge6, 512, 3, act_type="mish")
+    conv6 = convolution_2d(conv6, 512, 3, act_type="mish")
+    conv6 = convolution_2d(conv6, 512, 3, act_type="mish")
 
-    up7 = convolution_2d((UpSampling2D(size=(2, 2))(conv6)), 256, 2, act_type="swish")
+    up7 = convolution_2d((UpSampling2D(size=(2, 2))(conv6)), 256, 2, act_type="mish")
     merge7 = concatenate([conv3, up7], axis=3)
-    conv7 = convolution_2d(merge7, 256, 3, act_type="swish")
-    conv7 = convolution_2d(conv7, 256, 3, act_type="swish")
-    conv7 = convolution_2d(conv7, 256, 3, act_type="swish")
+    conv7 = convolution_2d(merge7, 256, 3, act_type="mish")
+    conv7 = convolution_2d(conv7, 256, 3, act_type="mish")
+    conv7 = convolution_2d(conv7, 256, 3, act_type="mish")
 
-    up8 = convolution_2d((UpSampling2D(size=(2, 2))(conv7)), 128, 2, act_type="swish")
+    up8 = convolution_2d((UpSampling2D(size=(2, 2))(conv7)), 128, 2, act_type="mish")
     merge8 = concatenate([conv2, up8], axis=3)
-    conv8 = convolution_2d(merge8, 128, 3, act_type="swish")
-    conv8 = convolution_2d(conv8, 128, 3, act_type="swish")
-    conv8 = convolution_2d(conv8, 128, 3, act_type="swish")
+    conv8 = convolution_2d(merge8, 128, 3, act_type="mish")
+    conv8 = convolution_2d(conv8, 128, 3, act_type="mish")
+    conv8 = convolution_2d(conv8, 128, 3, act_type="mish")
 
-    up9 = convolution_2d((UpSampling2D(size=(2, 2))(conv8)), 64, 2, act_type="swish")
+    up9 = convolution_2d((UpSampling2D(size=(2, 2))(conv8)), 64, 2, act_type="mish")
     merge9 = concatenate([conv1, up9], axis=3)
-    conv9 = convolution_2d(merge9, 64, 3, act_type="swish")
-    conv9 = convolution_2d(conv9, 64, 3, act_type="swish")
-    conv9 = convolution_2d(conv9, 64, 3, act_type="swish")
+    conv9 = convolution_2d(merge9, 64, 3, act_type="mish")
+    conv9 = convolution_2d(conv9, 64, 3, act_type="mish")
+    conv9 = convolution_2d(conv9, 64, 3, act_type="mish")
 
     conv10 = Conv2D(3, 1, activation='tanh')(conv9)
 
