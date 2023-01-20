@@ -9,7 +9,7 @@ from PIL import Image
 from core.utils import load_image, deprocess_image, preprocess_image
 from core.networks import unet_spp_large_swish_generator_model
 from core.dcp import estimate_transmission
-from test import start_testing
+from test import start_testing, start_testing_final_images
 
 img_size = 512
 
@@ -64,8 +64,7 @@ output_dir = "outputs/O-HAZE"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-if __name__ == "__main__":
-
+def run_on_general_data():
     img_src = glob.glob("./image/*.tif")      # Enter the image directory
 
     cnt=0
@@ -112,12 +111,10 @@ if __name__ == "__main__":
         cnt+=1
         print(cnt, len(img_src))
         # if cnt==10: break
-        
-    
-    
-    
-    
-    
+
+
+
+def run_on_test_data():
     img_src = glob.glob("./image/new_images/*.jpg")      # Enter the image directory
 
     cnt=0
@@ -130,13 +127,13 @@ if __name__ == "__main__":
         # ori_image_resized = cv2.resize(ori_image, (img_size,img_size))
         # cv2.imwrite(f"{img_name}_resized.jpg", ori_image_resized)
 
-        base_path_hazyImg = './image/'
+        base_path_hazyImg = './image/new_images/'
         base_path_result = 'patchMap/'
         # imgname = 'waterfall.tif'
         save_dir = './result/'
         modelDir = './weights/PMS-Net.h5'
         # print(img_name)
-        start_testing(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir)
+        start_testing_final_images(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir)
         out_path = save_dir + 'py_recover_' + str(img_name.split('.')[0]) + '.jpg'
         t = cv2.imread(out_path)
         t = cv2.cvtColor(t, cv2.COLOR_BGR2GRAY)
@@ -164,5 +161,9 @@ if __name__ == "__main__":
         cnt+=1
         print(cnt, len(img_src))
         # if cnt==10: break
+
+if __name__ == "__main__":
+    run_on_general_data()
+    run_on_test_data()
     print("Done!")
 
