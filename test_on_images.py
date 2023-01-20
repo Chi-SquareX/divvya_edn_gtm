@@ -112,5 +112,57 @@ if __name__ == "__main__":
         cnt+=1
         print(cnt, len(img_src))
         # if cnt==10: break
+        
+    
+    
+    
+    
+    
+    img_src = glob.glob("./image/new_images/*.jpg")      # Enter the image directory
+
+    cnt=0
+    for img_path in img_src:
+
+        img_name = get_file_name(img_path)
+        ori_image = cv2.imread(img_path)
+        h, w, _ = ori_image.shape
+
+        # ori_image_resized = cv2.resize(ori_image, (img_size,img_size))
+        # cv2.imwrite(f"{img_name}_resized.jpg", ori_image_resized)
+
+        base_path_hazyImg = './image/'
+        base_path_result = 'patchMap/'
+        # imgname = 'waterfall.tif'
+        save_dir = './result/'
+        modelDir = './weights/PMS-Net.h5'
+        # print(img_name)
+        start_testing(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir)
+        out_path = save_dir + 'py_recover_' + str(img_name.split('.')[0]) + '.jpg'
+        t = cv2.imread(out_path)
+        t = cv2.cvtColor(t, cv2.COLOR_BGR2GRAY)
+        # t = estimate_transmission(ori_image)
+        t = preprocess_depth_img(t)
+
+        ori_image = preprocess_cv2_image(ori_image)
+
+        x_test = np.concatenate((ori_image, t), axis=2)
+
+        x_test = np.reshape(x_test, (1,img_size,img_size,4))
+        generated_images = g.predict(x=x_test)
+
+        de_test = deprocess_image(generated_images)
+        de_test = np.reshape(de_test, (img_size,img_size,3))
+
+        # pred_image_resized = cv2.cvtColor(de_test, cv2.COLOR_BGR2RGB)
+        # cv2.imwrite(f"{img_name}_resized_pred.jpg", pred_image_resized)
+
+        de_test = cv2.resize(de_test, (w, h))
+
+        rgb_de_test = cv2.cvtColor(de_test, cv2.COLOR_BGR2RGB)
+        cv2.imwrite(f"{output_dir}/{img_name}.jpg", rgb_de_test)
+
+        cnt+=1
+        print(cnt, len(img_src))
+        # if cnt==10: break
     print("Done!")
 
