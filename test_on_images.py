@@ -81,10 +81,9 @@ def run_on_general_data():
         base_path_result = 'patchMap/'
         # imgname = 'waterfall.tif'
         save_dir = './result/'
-        logitdir = '/content/drive/MyDrive/2022/Rahul_Projects/Divvya_projects/recovered_images/'
         modelDir = './weights/PMS-Net.h5'
         # print(img_name)
-        start_testing(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir, logitdir)
+        start_testing(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir)
         out_path = save_dir + 'py_recover_' + str(img_name.split('.')[0]) + '.jpg'
         t = cv2.imread(out_path)
         t = cv2.cvtColor(t, cv2.COLOR_BGR2GRAY)
@@ -132,10 +131,9 @@ def run_on_test_data():
         base_path_result = 'patchMap/'
         # imgname = 'waterfall.tif'
         save_dir = './result/'
-        logitdir = '/content/drive/MyDrive/2022/Rahul_Projects/Divvya_projects/recovered_images/'
         modelDir = './weights/PMS-Net.h5'
         # print(img_name)
-        start_testing_final_images(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir, logitdir)
+        start_testing_final_images(base_path_hazyImg, base_path_result, img_name, save_dir, modelDir)
         out_path = save_dir + 'py_recover_' + str(img_name.split('.')[0]) + '.jpg'
         t = cv2.imread(out_path)
         t = cv2.cvtColor(t, cv2.COLOR_BGR2GRAY)
@@ -168,4 +166,3 @@ if __name__ == "__main__":
     run_on_general_data()
     run_on_test_data()
     print("Done!")
-
