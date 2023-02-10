@@ -5,18 +5,12 @@ from keras.models import load_model
 from dehaze_patchMap_dehaze import dehaze_patchMap
 from PIL import Image
 import matplotlib.image
-from skimage.metrics import structural_similarity as cal_ssim
 
 
-def start_testing(base_path_hazyImg, base_path_result, imgname, save_dir, modelDir, logitdir):
+def start_testing(base_path_hazyImg, base_path_result, imgname, save_dir, modelDir):
     print("Process image: ", imgname)
 
     image = cv2.imread(base_path_hazyImg + imgname + ".png")
-
-    savename_result = logitdir + 'py_recover_' + str(imgname.split('.')[0]) + '.jpg'
-
-    logit = cv2.imread(savename_result)
-
     if image.shape[0] != 480 or image.shape[1] != 640:
         print('resize image tp 640*480')
         image = cv2.resize(image, (640, 480))
@@ -27,25 +21,16 @@ def start_testing(base_path_hazyImg, base_path_result, imgname, save_dir, modelD
 
     recover_result, tx = dehaze_patchMap(image, 0.95, patchMap)
 
-    
+    savename_result = save_dir + 'py_recover_' + str(imgname.split('.')[0]) + '.jpg'
     normalized_arr = (recover_result - np.min(recover_result)) / (np.max(recover_result) - np.min(recover_result))
 
     result_arr = normalized_arr.copy()
-
-    psnr = cv2.PSNR(result_arr, logit)
-    ssmi = cal_ssim(logit, result_arr, data_range=pred.max() - pred.min(), multichannel=True)
-    print("PSNR Metric Value, {} \n SSMI Metric Value: {}".format(psnr, ssmi))
-    savename_result = save_dir + 'py_recover_' + str(imgname.split('.')[0]) + '.jpg'
     matplotlib.image.imsave(savename_result, result_arr)
 
-def start_testing_final_images(base_path_hazyImg, base_path_result, imgname, save_dir, modelDir, logitdir):
+def start_testing_final_images(base_path_hazyImg, base_path_result, imgname, save_dir, modelDir):
     print("Process image: ", imgname)
 
     image = cv2.imread(base_path_hazyImg + imgname + ".png")
-
-    savename_result = logitdir + 'py_recover_' + str(imgname.split('.')[0]) + '.jpg'
-
-    logit = cv2.imread(savename_result)
     if image.shape[0] != 480 or image.shape[1] != 640:
         print('resize image tp 640*480')
         image = cv2.resize(image, (640, 480))
@@ -60,10 +45,6 @@ def start_testing_final_images(base_path_hazyImg, base_path_result, imgname, sav
     normalized_arr = (recover_result - np.min(recover_result)) / (np.max(recover_result) - np.min(recover_result))
 
     result_arr = normalized_arr.copy()
-    psnr = cv2.PSNR(result_arr, logit)
-    ssmi = cal_ssim(logit, result_arr, data_range=pred.max() - pred.min(), multichannel=True)
-    print("PSNR Metric Value, {} \n SSMI Metric Value: {}".format(psnr, ssmi))
-    savename_result = save_dir + 'py_recover_' + str(imgname.split('.')[0]) + '.jpg'
     matplotlib.image.imsave(savename_result, result_arr)
 
 if __name__ == "__main__":
