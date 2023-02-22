@@ -40,6 +40,8 @@ def get_file_name(path):
 def preprocess_cv2_image(cv_img):
     cv_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
     cv_img = cv2.resize(cv_img, (img_size, img_size))
+    cv_img = cv2.detailEnhance(cv_img, sigma_s=10, sigma_r=0.15)
+    cv_img = cv2.edgePreservingFilter(cv_img, flags=1, sigma_s=60, sigma_r=0.4)
     img = np.array(cv_img)
     img = (img - 127.5) / 127.5
     return img
